@@ -11,12 +11,6 @@ export default {
             `https://course-ec-api.hexschool.io/api/${vm.uuid}/ec/products`
         );
 
-        // let params = {
-        //     "page": "1",
-        // };
-        // Object.keys(params)
-        //     .forEach(key => url.searchParams.append(key, params[key]));
-
         let headers = {
             "Content-Type": "application/json",
             "Accept": "application/json",            

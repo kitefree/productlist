@@ -34,16 +34,10 @@
         const btnQuery = document.querySelector("#btnQuery");
     
         import CRUD from './module.js';
-        //import CRUD from 'https://kitefree.github.io/productlist/module.js';
-        //btnQuery.addEventListener('click', ()=>CRUD.query());
+
         console.log(CRUD);
         console.log(CRUD.uuid);
-        btnQuery.addEventListener('click', ()=>CRUD.query());
-    
-    
-        //這樣寫為什麼只能拿到btnQuery element object
-        //btnQuery.addEventListener('click', obj.query);
-        //obj.query();
+        btnQuery.addEventListener('click', ()=>CRUD.query());    
     
     </script>
 </body>
