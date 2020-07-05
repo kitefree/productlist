@@ -30,13 +30,10 @@
     </div>
     
     <script type="module">
-    
-        const btnQuery = document.querySelector("#btnQuery");
-    
         import CRUD from './module.js';
 
-        console.log(CRUD);
-        console.log(CRUD.uuid);
+        const btnQuery = document.querySelector("#btnQuery");
+    
         btnQuery.addEventListener('click', ()=>CRUD.query());    
     
     </script>

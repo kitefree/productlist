@@ -4,8 +4,7 @@ export default {
     uuid: '603cb025-ce43-4d9c-bb8a-51732cf440ab',    
     query() {
 
-        const vm = this;
-        //console.log(e);
+        const vm = this;       
 
         const url = new URL(
             `https://course-ec-api.hexschool.io/api/${vm.uuid}/ec/products`
@@ -22,8 +21,7 @@ export default {
         })
         .then(response => response.json())
         .then(function(json){
-            vm.productList = JSON.parse(JSON.stringify(json.data));
-            //console.table(vm.productList);
+            vm.productList = JSON.parse(JSON.stringify(json.data));            
             vm.render();
         });
 
