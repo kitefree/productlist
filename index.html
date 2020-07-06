@@ -9,32 +9,230 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css">
 
-    <title>第二週 - 課程 API 串接</title>
+    <title>第三週 - 產品管理頁面 </title>
+    <style>
+
+    </style>
 </head>
 
 <body>
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    
-    
-    <BR>
-    
-    <div class="container">
-        <button type="button" class="btn btn-primary" id="btnQuery">查詢</button>
-        <h2>產品列表</h2>
-        <div id="app" class="card-columns">
-        </div>
-    </div>
-    
-    <script type="module">
-        import CRUD from './module.js';
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.js"></script>
 
-        const btnQuery = document.querySelector("#btnQuery");
-    
-        btnQuery.addEventListener('click', ()=>CRUD.query());    
+    <BR>
+    <div id="app">
+
+
+        <div class="container">
+            <button type="button" class="btn btn-primary" @click="btnQuery">查詢</button><BR><BR>
+            <button type="button" class="btn btn-primary" @click="btnAdd">建立新的產品</button><BR><BR>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">分類</th>
+                        <th scope="col">產品名稱</th>
+                        <th scope="col">原價</th>
+                        <th scope="col">售價</th>
+                        <th scope="col">是否啟用</th>
+                        <th scope="col">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(item,key) in productList" :key="key">
+                        <th scope="row">{{key+1}}</th>
+                        <td>{{item.category}}</td>
+                        <td>{{item.title}}</td>
+                        <td>{{item.origin_price}}</td>
+                        <td>{{item.price}}</td>
+                        <td>{{item.enabled}}</td>
+                        <td>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-primary">編輯</button>
+                                <button type="button" class="btn btn-danger" :data-id="key"
+                                    @click="btnDeleteConfirm">刪除</button>
+                            </div>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+
+
+        </div>
+
+        <div class="modal fade in" id="deleteProductModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content border-0">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteProductModalLabel">刪除產品</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        確定要刪除產品
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-danger" @click="btnDeleteYes">刪除</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade in" id="addProductModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content border-0">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addProductModalLabel">新增產品</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label for="imagUrl">輸入圖片網址</label>
+                                    <input type="text" id="imagUrl" class="form-control" v-model="tempProduct.imagUrl">
+                                </div>
+                                <img class="img-fluid" :src="tempProduct.imagUrl">
+                            </div>
+                            <div class="col-sm-8">
+                                <div class="form-group">
+                                    <label for="title">標題</label>
+                                    <input id="title" type="text" class="form-control" placeholder="請輸入標題"
+                                        v-model="tempProduct.title">
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="col-md-6">
+                                        <label for="category">分類</label>
+                                        <input id="category" type="text" class="form-control" placeholder="請輸入分類"
+                                            v-model="tempProduct.category">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="unit">單位</label>
+                                        <input id="unit" type="unit" class="form-control" placeholder="請輸入單位"
+                                            v-model="tempProduct.unit">
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="col-md-6">
+                                        <label for="origin_price">原價</label>
+                                        <input id="origin_price" type="text" class="form-control" placeholder="請輸入原價"
+                                            v-model="tempProduct.origin_price">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="price">售價</label>
+                                        <input id="price" type="text" class="form-control" placeholder="請輸入售價"
+                                            v-model="tempProduct.price">
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="form-row">
+
+                                    <label for="description">產品描述</label>
+                                    <textarea type="text" id="description" class="form-control" placeholder="請輸入產品描述"
+                                        v-model="tempProduct.description"></textarea>
+
+                                </div>
+                                <div class="form-row">
+
+                                    <label for="content">說明內容</label>
+                                    <textarea type="text" id="content" class="form-control" placeholder="請輸入說明內容"
+                                        v-model="tempProduct.content"></textarea>
+
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-check">
+                                        <input type="checkbox" id="enabled" class="form-check-input"
+                                            v-model="tempProduct.enabled = false">
+                                        <label for="enabled" class="form-check-label">是否啟用</label>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" @click="btnAddSave">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script type="module">
+        //import CRUD from './module.js';
+var app = new Vue({
+  el: '#app',
+  data: {    
+    productList:[],
+    tempProduct:{},
+    event_id:""
+  },
+  methods:{
+    btnAdd(){
+        $('#addProductModal').modal();
+    },
+    btnAddSave(){        
+        const vm = this;        
+        vm.productList.push(vm.tempProduct);
+        console.log(vm.tempProduct);
+        vm.tempProduct = {};
+        $('#addProductModal').modal('hide');
+    },
+    btnDeleteConfirm(e){
+        const vm = this;   
+        let event_id = e.target.dataset.id;
+        vm.event_id = event_id;        
+        $('#deleteProductModal').modal();
+    },
+    btnDeleteYes(){        
+        const vm = this;                
+        vm.productList.splice(vm.event_id,1);        
+        vm.event_id = "";
+        $('#deleteProductModal').modal('hide');
+        
+    },
+    btnQuery(){
+        const vm = this;       
+        const uuid = '603cb025-ce43-4d9c-bb8a-51732cf440ab';
+        const url = new URL(
+            `https://course-ec-api.hexschool.io/api/${uuid}/ec/products`
+        );
+
+        let headers = {
+            "Content-Type": "application/json",
+            "Accept": "application/json",            
+        };
+
+        fetch(url, {
+            method: "GET",
+            headers: headers,
+        })
+        .then(response => response.json())
+        .then(function(json){            
+            //vm.productList = JSON.parse(JSON.stringify(json.data));    
+            vm.productList = JSON.parse(JSON.stringify(json.data));    
+        });
+    }
+  }
+  
+})
+        
     
     </script>
 </body>
