@@ -11,7 +11,9 @@
 
     <title>第三週 - 產品管理頁面 </title>
     <style>
-
+        .enabledClass{
+            color:green;
+        }
     </style>
 </head>
 
@@ -50,10 +52,10 @@
                         <td>{{item.title}}</td>
                         <td>{{item.origin_price}}</td>
                         <td>{{item.price}}</td>
-                        <td>{{item.enabled}}</td>
+                        <td :class="{enabledClass:item.enabled}">{{item.enabled}}</td>
                         <td>
                             <div class="btn-group">
-                                <button type="button" class="btn btn-primary">編輯</button>
+                                <button type="button" class="btn btn-primary" @click="btnEdit(item)">編輯</button>
                                 <button type="button" class="btn btn-danger" :data-id="key"
                                     @click="btnDeleteConfirm">刪除</button>
                             </div>
@@ -155,7 +157,7 @@
                                 <div class="form-row">
                                     <div class="form-check">
                                         <input type="checkbox" id="enabled" class="form-check-input"
-                                            v-model="tempProduct.enabled = false">
+                                            v-model="tempProduct.enabled" >
                                         <label for="enabled" class="form-check-label">是否啟用</label>
                                     </div>
                                 </div>
@@ -193,6 +195,11 @@ var app = new Vue({
         console.log(vm.tempProduct);
         vm.tempProduct = {};
         $('#addProductModal').modal('hide');
+    },
+    btnEdit(item){
+        const vm = this;
+        vm.tempProduct = item;
+        $('#addProductModal').modal();
     },
     btnDeleteConfirm(e){
         const vm = this;   
