@@ -89,11 +89,11 @@
             </div>
         </div>
 
-        <div class="modal fade in" id="addProductModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal fade in" id="fillProductModal" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content border-0">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="addProductModalLabel">新增產品</h5>
+                        <h5 class="modal-title" id="fillProductModalLabel">新增產品</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -169,7 +169,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" @click="btnAddSave">Save changes</button>
+                        <button type="button" class="btn btn-primary" @click="btnSave">Save changes</button>
                     </div>
                 </div>
             </div>
@@ -183,23 +183,42 @@ var app = new Vue({
   data: {    
     productList:[],
     tempProduct:{},
-    event_id:""
+    event_id:"",
+    mode:""
   },
   methods:{
     btnAdd(){
-        $('#addProductModal').modal();
+        const vm = this;
+        $('#fillProductModal').modal();
+        vm.mode="add";
     },
-    btnAddSave(){        
-        const vm = this;        
-        vm.productList.push(vm.tempProduct);
-        console.log(vm.tempProduct);
+    btnSave(){        
+        const vm = this;
+        if(vm.mode == "add")
+        {
+            vm.productList.push(vm.tempProduct);        
+        }
+        else if(vm.mode="edit")
+        {
+            
+            console.log(vm.tempProduct);
+            vm.productList.forEach(function(item, index, array) {
+                if(item.id == vm.tempProduct.id)
+                {                    
+                   vm.productList[index] = vm.tempProduct;
+                }
+            });
+        }
+        
+        vm.edit="";
         vm.tempProduct = {};
-        $('#addProductModal').modal('hide');
+        $('#fillProductModal').modal('hide');
     },
     btnEdit(item){
         const vm = this;
-        vm.tempProduct = item;
-        $('#addProductModal').modal();
+        vm.tempProduct = Object.assign({}, item);        
+        $('#fillProductModal').modal();
+        vm.mode="edit";
     },
     btnDeleteConfirm(e){
         const vm = this;   
@@ -231,8 +250,7 @@ var app = new Vue({
             headers: headers,
         })
         .then(response => response.json())
-        .then(function(json){            
-            //vm.productList = JSON.parse(JSON.stringify(json.data));    
+        .then(function(json){                        
             vm.productList = JSON.parse(JSON.stringify(json.data));    
         });
     }
