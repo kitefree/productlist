@@ -9,10 +9,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css">
 
-    <title>第三週 - 產品管理頁面 </title>
+    <title>第四週</title>
     <style>
-        .enabledClass{
-            color:green;
+        .enabledClass {
+            color: green;
         }
     </style>
 </head>
@@ -39,6 +39,7 @@
                         <th scope="col">#</th>
                         <th scope="col">分類</th>
                         <th scope="col">產品名稱</th>
+                        <th scope="col">圖片</th>
                         <th scope="col">原價</th>
                         <th scope="col">售價</th>
                         <th scope="col">是否啟用</th>
@@ -46,9 +47,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(item,key) in productList" :key="key">
+                    <tr v-for="(item,key) in productList" :key="item.id">
                         <th scope="row">{{key+1}}</th>
                         <td>{{item.category}}</td>
+                        <td><img :src="item.imageUrl[0]" width="50" height="50" /></td>
                         <td>{{item.title}}</td>
                         <td>{{item.origin_price}}</td>
                         <td>{{item.price}}</td>
@@ -56,7 +58,7 @@
                         <td>
                             <div class="btn-group">
                                 <button type="button" class="btn btn-primary" @click="btnEdit(item)">編輯</button>
-                                <button type="button" class="btn btn-danger" :data-id="key"
+                                <button type="button" class="btn btn-danger" :data-id="item.id"
                                     @click="btnDeleteConfirm">刪除</button>
                             </div>
                         </td>
@@ -66,7 +68,7 @@
             </table>
 
 
-
+            <pagination :pages="pagination" @update="btnQuery"></pagination>
         </div>
 
         <div class="modal fade in" id="deleteProductModal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -103,9 +105,10 @@
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <label for="imageUrl">輸入圖片網址</label>
-                                    <input type="text" id="imageUrl" class="form-control" v-model="tempProduct.imageUrl">
+                                    <input type="text" id="imageUrl" class="form-control"
+                                        v-model="tempProduct.imageUrl[0]">
                                 </div>
-                                <img class="img-fluid" :src="tempProduct.imageUrl">
+                                <img class="img-fluid" :src="tempProduct.imageUrl[0]">
                             </div>
                             <div class="col-sm-8">
                                 <div class="form-group">
@@ -157,7 +160,7 @@
                                 <div class="form-row">
                                     <div class="form-check">
                                         <input type="checkbox" id="enabled" class="form-check-input"
-                                            v-model="tempProduct.enabled" >
+                                            v-model="tempProduct.enabled">
                                         <label for="enabled" class="form-check-label">是否啟用</label>
                                     </div>
                                 </div>
@@ -174,92 +177,9 @@
                 </div>
             </div>
         </div>
-
+        
     </div>
-    <script type="module">
-        //import CRUD from './module.js';
-var app = new Vue({
-  el: '#app',
-  data: {    
-    productList:[],
-    tempProduct:{},
-    event_id:"",
-    mode:""
-  },
-  methods:{
-    btnAdd(){
-        const vm = this;
-        $('#fillProductModal').modal();
-        vm.mode="add";
-    },
-    btnSave(){        
-        const vm = this;
-        if(vm.mode == "add")
-        {
-            vm.productList.push(vm.tempProduct);        
-        }
-        else if(vm.mode="edit")
-        {
-            
-            console.log(vm.tempProduct);
-            vm.productList.forEach(function(item, index, array) {
-                if(item.id == vm.tempProduct.id)
-                {                    
-                   vm.productList[index] = vm.tempProduct;
-                }
-            });
-        }
-        
-        vm.edit="";
-        vm.tempProduct = {};
-        $('#fillProductModal').modal('hide');
-    },
-    btnEdit(item){
-        const vm = this;
-        vm.tempProduct = Object.assign({}, item);        
-        $('#fillProductModal').modal();
-        vm.mode="edit";
-    },
-    btnDeleteConfirm(e){
-        const vm = this;   
-        let event_id = e.target.dataset.id;
-        vm.event_id = event_id;        
-        $('#deleteProductModal').modal();
-    },
-    btnDeleteYes(){        
-        const vm = this;                
-        vm.productList.splice(vm.event_id,1);        
-        vm.event_id = "";
-        $('#deleteProductModal').modal('hide');
-        
-    },
-    btnQuery(){
-        const vm = this;       
-        const uuid = '603cb025-ce43-4d9c-bb8a-51732cf440ab';
-        const url = new URL(
-            `https://course-ec-api.hexschool.io/api/${uuid}/ec/products`
-        );
-
-        let headers = {
-            "Content-Type": "application/json",
-            "Accept": "application/json",            
-        };
-
-        fetch(url, {
-            method: "GET",
-            headers: headers,
-        })
-        .then(response => response.json())
-        .then(function(json){                        
-            vm.productList = JSON.parse(JSON.stringify(json.data));    
-        });
-    }
-  }
-  
-})
-        
-    
-    </script>
+    <script src="all.js" type="module"></script>
 </body>
 
 </html>
