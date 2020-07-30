@@ -1,5 +1,8 @@
     import pagination from './pagination.js';
-    Vue.component('pagination', pagination)
+    import modal from './modal.js';
+
+    Vue.component('pagination', pagination);
+    Vue.component('modal', modal);
 
     var app = new Vue({
     el: '#app',
@@ -18,27 +21,29 @@
     methods:{
       btnAdd(){
           const vm = this;
+          vm.tempProduct = {imageUrl: []};
           $('#fillProductModal').modal();
           vm.mode="add";
       },
-      btnSave(){        
+      btnSave(item){        
+          debugger;
           const vm = this;
           if(vm.mode == "add")
           {
               
-              vm.productList.push(vm.tempProduct);            
+              //vm.productList.push(vm.tempProduct);            
               const url = `${this.api.path}${this.api.uuid}/admin/ec/product`;
               //新增 使用post
-              axios.post(url,vm.tempProduct).then((res) => {
+              axios.post(url,item).then((res) => {
                   console.log(res);   
                   this.btnQuery();             
               });
   
           }
-          else if(vm.mode="edit")
+          else if(vm.mode=="edit")
           {
               
-              console.log(vm.tempProduct);
+              console.log(item);
               //未串api前寫法
               /*
               vm.productList.forEach(function(item, index, array) {
@@ -76,7 +81,7 @@
           //新增 使用post
           axios.get(url).then((res) => {
               console.log(res);   
-              vm.tempProduct = res.data.data;              
+              vm.tempProduct = res.data.data;                         
               $('#fillProductModal').modal();
               vm.mode="edit";
           });
