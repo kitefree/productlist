@@ -29,8 +29,7 @@
     <div id="app">
 
 
-        <div class="container">
-            <button type="button" class="btn btn-primary" @click="btnQuery">查詢</button><BR><BR>
+        <div class="container">            
             <button type="button" class="btn btn-primary" @click="btnAdd">建立新的產品</button><BR><BR>
 
             <table class="table">
@@ -91,7 +90,7 @@
             </div>
         </div>
         <div class="modal fade in" id="fillProductModal" tabindex="-1" role="dialog" aria-hidden="true">
-            <modal :mode="mode" :temp-product="tempProduct" @to-save="btnSave"></modal>
+            <modal :mode="mode" :temp-product="tempProduct" @tosave="btnSave"></modal>
         </div>
 
         

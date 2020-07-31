@@ -25,8 +25,7 @@
           $('#fillProductModal').modal();
           vm.mode="add";
       },
-      btnSave(item){        
-          debugger;
+      btnSave(item){                  
           const vm = this;
           if(vm.mode == "add")
           {
@@ -55,9 +54,9 @@
               */
   
               //串api後寫法
-              const url = `${this.api.path}${this.api.uuid}/admin/ec/product/${vm.tempProduct.id}`;
+              const url = `${this.api.path}${this.api.uuid}/admin/ec/product/${item.id}`;
               //修改使用 patch
-              axios.patch(url,vm.tempProduct).then((res) => {
+              axios.patch(url,item).then((res) => {
                   console.log(res);                
                   this.btnQuery();
               });
