@@ -3,7 +3,7 @@ export default{
     <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content border-0">
         <div class="modal-header">
-            <h5 class="modal-title" id="fillProductModalLabel">{{mode =='edit' ? '編輯產品' : '新增產品'}}</h5>
+            <h5 class="modal-title" id="fillProductModalLabel">{{mode ==='edit' ? '編輯產品' : '新增產品'}}</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -14,9 +14,9 @@ export default{
                     <div class="form-group">
                         <label for="imageUrl">輸入圖片網址</label>
                         <input type="text" id="imageUrl" class="form-control"
-                            v-model="tempProduct.imageUrl[0]">
+                            v-model="tempProduct.imageUrl">
                     </div>
-                    <img class="img-fluid" :src="tempProduct.imageUrl[0]">
+                    <img class="img-fluid" :src="tempProduct.imageUrl">
                 </div>
                 <div class="col-sm-8">
                     <div class="form-group">
@@ -87,7 +87,7 @@ export default{
     props:['tempProduct','mode'],
     methods:{
         save(){                        
-            this.$emit('tosave',this.tempProduct);
+            this.$emit('to-save',this.tempProduct);
         }
     }
 }

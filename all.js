@@ -13,7 +13,7 @@
           path:'https://course-ec-api.hexschool.io/api/',
           uuid:'603cb025-ce43-4d9c-bb8a-51732cf440ab'
       },
-      event_id:'',
+      eventId:'',
       mode:'',
       token:'',
       pagination: {},
@@ -27,7 +27,7 @@
       },
       btnSave(item){                  
           const vm = this;
-          if(vm.mode == "add")
+          if(vm.mode === "add")
           {
               
               //vm.productList.push(vm.tempProduct);            
@@ -39,14 +39,14 @@
               });
   
           }
-          else if(vm.mode=="edit")
+          else if(vm.mode === "edit")
           {
               
               console.log(item);
               //未串api前寫法
               /*
               vm.productList.forEach(function(item, index, array) {
-                  if(item.id == vm.tempProduct.id)
+                  if(item.id === vm.tempProduct.id)
                   {                    
                      vm.productList[index] = vm.tempProduct;
                   }
@@ -89,8 +89,8 @@
       },
       btnDeleteConfirm(e){
           const vm = this;   
-          let event_id = e.target.dataset.id;
-          vm.event_id = event_id;
+          let eventId = e.target.dataset.id;
+          vm.eventId = eventId;
           $('#deleteProductModal').modal();
       },
       btnDeleteYes(){      
@@ -98,16 +98,16 @@
           const vm = this;         
   
           //未串api前 寫法
-          //vm.productList.splice(vm.event_id,1);
+          //vm.productList.splice(vm.eventId,1);
   
           //串api後 寫法
-          const url = `${this.api.path}${this.api.uuid}/admin/ec/product/${vm.event_id}`;
+          const url = `${this.api.path}${this.api.uuid}/admin/ec/product/${vm.eventId}`;
               axios.delete(url,vm.tempProduct).then((res) => {
                   console.log(res);                
                   this.btnQuery();
               });
   
-          vm.event_id = "";
+          vm.eventId = "";
           $('#deleteProductModal').modal('hide');
           
       },
